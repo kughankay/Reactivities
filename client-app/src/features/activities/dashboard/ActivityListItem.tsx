@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom';
 import { Button, Icon, Item, Segment } from "semantic-ui-react";
 import { IActivity } from '../../../app/layout/models/activity';
