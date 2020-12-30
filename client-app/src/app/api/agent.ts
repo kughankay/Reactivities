@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import { toast } from 'react-toastify';
 import { history } from '../..';
-import { IActivity } from '../layout/models/activity';
+import { IActivitiesEnvelope, IActivity } from '../layout/models/activity';
 import { IPhoto, IProfile } from '../layout/models/profile';
 import { IUser, IUserFormValues } from '../layout/models/user';
 
@@ -53,13 +53,15 @@ const request = {
 }
 
 const Activities = {
-    list: (): Promise<IActivity[]> => request.get('/activities'),
-    details: (id: string) => request.get(`/activities/${id}`),
-    create: (activity: IActivity) => request.post('/activities', activity),
-    update: (activity: IActivity) => request.put(`/activities/${activity.id}`, activity),
-    delete: (id: string) => request.del(`/activities/${id}`),
-    attend: (id: string) => request.post(`/activities/${id}/attend`, {}),
-    unattend: (id: string) => request.del(`/activities/${id}/attend`)
+    list: (params: URLSearchParams): Promise<IActivitiesEnvelope> =>
+    axios.get('/activities', {params: params}).then(sleep(1000)).then(responseBody),
+  details: (id: string) => request.get(`/activities/${id}`),
+  create: (activity: IActivity) => request.post("/activities", activity),
+  update: (activity: IActivity) =>
+    request.put(`/activities/${activity.id}`, activity),
+  delete: (id: string) => request.del(`/activities/${id}`),
+  attend: (id: string) => request.post(`/activities/${id}/attend`, {}),
+  unattend: (id: string) => request.del(`/activities/${id}/attend`),
 };
 
 const User = {
@@ -76,7 +78,8 @@ const Profiles = {
     updateProfile: (profile: Partial<IProfile>) => request.put(`/profiles`, profile),
     follow: (username: string) => request.post(`/profiles/${username}/follow`, {}),
     unfollow: (username: string) => request.del(`/profiles/${username}/follow`),
-    listFollowings: (username: string, predicate: string) => request.get(`/profiles/${username}/follow?predicate=${predicate}`)
+    listFollowings: (username: string, predicate: string) => request.get(`/profiles/${username}/follow?predicate=${predicate}`),
+    listActivities: (username: string, predicate: string) => request.get(`/profiles/${username}/activities?predicate=${predicate}`)
 }
 
 export default {
